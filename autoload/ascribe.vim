@@ -21,16 +21,16 @@ function ascribe#set_up_buffer(file)
     endif
 
     " Indentation
+    if l:attrs['tab-stop'] !=# 'unspecified'
+        call s:setOptVal(['softtabstop', 'shiftwidth', 'tabstop'], l:attrs['tab-stop'])
+    endif
+
     let l:et = l:attrs['expand-tab']
     if l:et !=# 'unspecified'
         if l:et ==# 'unset'
-            call s:setOptVal(['softtabstop', 'shiftwidth'], '8')
+            call s:setOptVal(['softtabstop', 'shiftwidth'], &l:tabstop)
         endif
         call s:setOptBool(['expandtab'], l:et)
-    endif
-
-    if l:attrs['tab-stop'] !=# 'unspecified'
-        call s:setOptVal(['softtabstop', 'shiftwidth'], l:attrs['tab-stop'])
     endif
 
     " Max line length
