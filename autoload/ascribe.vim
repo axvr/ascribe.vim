@@ -33,13 +33,13 @@ function <SID>get_attributes(attrs, file)
     let l:item = 0
 
     for l:a in a:attrs
-        let l:match = matchlist(l:result[l:item], '\m\C: \([0-9a-zA-Z_.-]\+\)$')
+        let l:match = matchlist(l:result[l:item], '\m\C: \([0-9a-zA-Z_.-]*\)$')
 
         let l:item = l:item + 1
 
         let l:value = l:match[1]
 
-        if len(l:value) == 0 || l:value ==# 'unspecified'
+        if l:value ==# 'unspecified'
             continue
         elseif l:value ==# 'set'
             let l:value = 1
