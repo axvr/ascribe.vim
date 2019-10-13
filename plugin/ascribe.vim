@@ -1,4 +1,4 @@
-" Ascribe.vim - An alternative to EditorConfig.
+" Ascribe.vim -- An alternative to EditorConfig.
 "
 " Written in 2019 by Alex Vear <av@axvr.io>
 "
@@ -11,7 +11,19 @@
 " along with this software. If not, see
 " <http://creativecommons.org/publicdomain/zero/1.0/>.
 
+" FIXME: if Ascribe is loaded from the 'start' dir when using Vim packages
+" this variable will not be available from the user's '.vimrc'.
+let g:ascribe_handlers = {
+    \ 'expand-tab': function('ascribe#handlers#expand_tab'),
+    \ 'tab-stop': function('ascribe#handlers#tab_stop'),
+    \ 'eol': function('ascribe#handlers#eol'),
+    \ 'trim-trailing-whitespace': function('ascribe#handlers#trim_whitespace'),
+    \ 'final-newline': function('ascribe#handlers#final_newline'),
+    \ 'line-length': function('ascribe#handlers#line_length'),
+    \ 'binary': function('ascribe#handlers#binary')
+    \ }
+
 augroup ascribe
     autocmd!
-    autocmd BufReadPost,BufNewFile * call ascribe#set_up_buffer(@%)
+    autocmd BufReadPost,BufNewFile * call ascribe#configure_buffer(@%)
 augroup END

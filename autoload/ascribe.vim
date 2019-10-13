@@ -1,4 +1,4 @@
-" Ascribe.vim - An alternative to EditorConfig.
+" Ascribe.vim -- An alternative to EditorConfig.
 "
 " Written in 2019 by Alex Vear <av@axvr.io>
 "
@@ -11,99 +11,44 @@
 " along with this software. If not, see
 " <http://creativecommons.org/publicdomain/zero/1.0/>.
 
-function ascribe#set_up_buffer(file)
-    let l:attrs = s:getAttrs(['expand-tab', 'tab-stop', 'final-newline',
-                \ 'line-length', 'trim-trailing-whitespace', 'eol',
-                \ 'binary'], a:file)
+function ascribe#configure_buffer(file)
+    let b:attributes = s:get_attributes(keys(g:ascribe_handlers), a:file)
 
-    if empty(l:attrs)
-        return 1
-    endif
-
-    " Indentation
-    if l:attrs['tab-stop'] !=# 'unspecified'
-        call s:setOptVal(['softtabstop', 'shiftwidth', 'tabstop'], l:attrs['tab-stop'])
-    endif
-
-    let l:et = l:attrs['expand-tab']
-    if l:et !=# 'unspecified'
-        if l:et ==# 'unset'
-            call s:setOptVal(['softtabstop', 'shiftwidth'], &l:tabstop)
-        endif
-        call s:setOptBool(['expandtab'], l:et)
-    endif
-
-    " Max line length
-    call s:setOptVal(['textwidth'], l:attrs['line-length'])
-
-    " EOL - End-of-line character(s) to use
-    let l:eol = l:attrs['eol']
-    if l:eol ==? 'lf'
-        call s:setOptVal(['ff'], 'unix')
-    elseif l:eol ==? 'crlf'
-        call s:setOptVal(['ff'], 'dos')
-    endif
-
-    " EOF - Insert final newline
-    call s:setOptBool(['fixeol'], l:attrs['final-newline'])
-
-    " Binary mode
-    call s:setOptBool(['binary', 'readonly'], l:attrs['binary'])
-
-    " Trim trailing whitespace
-    if l:attrs['trim-trailing-whitespace'] ==# 'set'
-        exec 'autocmd! ascribe BufWritePre <buffer> call s:trim_trailing_whitespace()'
-    endif
+    for l:attr in keys(b:attributes)
+        call g:ascribe_handlers[l:attr](b:attributes[l:attr])
+    endfor
 endfunction
 
-function <SID>getAttrs(attrs, file)
+function <SID>get_attributes(attrs, file)
     let l:cli_args = join(map(copy(a:attrs), '"\"" . v:val .  "\""'), ' ')
     let l:result = systemlist('git check-attr ' . l:cli_args . ' -- ' . shellescape(a:file))
 
+    let l:attr_dict = {}
+
     " Check if not in a Git repo
     if v:shell_error
-        return {}
+        return l:attr_dict
     endif
 
-    let l:attr_dict = {}
-    let l:itt = 0
+    let l:item = 0
 
     for l:a in a:attrs
-        let l:match = matchlist(l:result[l:itt], '\m\C: \([0-9a-zA-Z_.-]\+\)$')
+        let l:match = matchlist(l:result[l:item], '\m\C: \([0-9a-zA-Z_.-]\+\)$')
 
-        if len(l:match[1]) == 0
+        let l:item = l:item + 1
+
+        let l:value = l:match[1]
+
+        if len(l:value) == 0 || l:value ==# 'unspecified'
             continue
+        elseif l:value ==# 'set'
+            let l:value = 1
+        elseif l:value ==# 'unset'
+            let l:value = 0
         endif
 
-        let l:attr_dict[l:a] = l:match[1]
-        let l:itt = l:itt + 1
+        let l:attr_dict[l:a] = l:value
     endfor
 
     return l:attr_dict
-endfunction
-
-function <SID>setOptBool(opts, attr)
-    for l:opt in a:opts
-        if a:attr ==# 'set'
-            exec 'silent! setlocal ' . l:opt
-        elseif a:attr ==# 'unset'
-            exec 'silent! setlocal no' . l:opt
-        endif
-    endfor
-endfunction
-
-function <SID>setOptVal(opts, attr)
-    if a:attr !=# 'unspecified'
-        for l:opt in a:opts
-            exec 'silent! setlocal ' . l:opt . '=' . a:attr
-        endfor
-    endif
-endfunction
-
-function <SID>trim_trailing_whitespace()
-    normal mz
-    normal Hmy
-    %s/\s\+$//e
-    normal 'yz<CR>
-    normal `z
 endfunction
