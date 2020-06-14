@@ -14,8 +14,8 @@
 function! ascribe#configure_buffer(file)
     let b:attributes = s:get_attributes(keys(g:ascribe_handlers), a:file)
 
-    for l:attr in keys(b:attributes)
-        call g:ascribe_handlers[l:attr](b:attributes[l:attr])
+    for attr in keys(b:attributes)
+        call g:ascribe_handlers[attr](b:attributes[attr])
     endfor
 endfunction
 
@@ -27,32 +27,32 @@ function! <SID>get_attributes(attrs, file)
 
     let result = systemlist(cmd)
 
-    let l:attr_dict = {}
+    let attr_dict = {}
 
     " Check if not in a Git repo
     if v:shell_error
-        return l:attr_dict
+        return attr_dict
     endif
 
-    let l:item = 0
+    let item = 0
 
-    for l:a in a:attrs
-        let l:match = matchlist(l:result[l:item], '\m\C: \([0-9a-zA-Z_.-]*\)$')
+    for a in a:attrs
+        let match = matchlist(result[item], '\m\C: \([0-9a-zA-Z_.-]*\)$')
 
-        let l:item = l:item + 1
+        let item = item + 1
 
-        let l:value = l:match[1]
+        let value = match[1]
 
-        if l:value ==# 'unspecified'
+        if value ==# 'unspecified'
             continue
-        elseif l:value ==# 'set'
-            let l:value = 1
-        elseif l:value ==# 'unset'
-            let l:value = 0
+        elseif value ==# 'set'
+            let value = 1
+        elseif value ==# 'unset'
+            let value = 0
         endif
 
-        let l:attr_dict[l:a] = l:value
+        let attr_dict[a] = value
     endfor
 
-    return l:attr_dict
+    return attr_dict
 endfunction
