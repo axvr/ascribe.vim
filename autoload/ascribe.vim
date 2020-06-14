@@ -20,8 +20,12 @@ function! ascribe#configure_buffer(file)
 endfunction
 
 function! <SID>get_attributes(attrs, file)
-    let l:cli_args = join(map(copy(a:attrs), '"\"" . v:val .  "\""'), ' ')
-    let l:result = systemlist('git check-attr ' . l:cli_args . ' -- ' . shellescape(a:file))
+    let attr_str = join(map(copy(a:attrs), '"\"" . v:val .  "\""'), ' ')
+    let path = shellescape(fnamemodify(a:file, ':h'))
+    let fname = shellescape(fnamemodify(a:file, ':t'))
+    let cmd = 'git -C ' . path . ' check-attr ' . attr_str . ' -- ' . fname
+
+    let result = systemlist(cmd)
 
     let l:attr_dict = {}
 

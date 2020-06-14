@@ -25,5 +25,5 @@ let g:ascribe_handlers = {
 
 augroup ascribe
     autocmd!
-    autocmd BufReadPost,BufNewFile * call ascribe#configure_buffer(@%)
+    autocmd BufReadPost,BufNewFile * call ascribe#configure_buffer(expand('%:p'))
 augroup END
