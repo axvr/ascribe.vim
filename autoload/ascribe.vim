@@ -29,10 +29,24 @@ function! <SID>get_attributes(attrs, file)
 
     let attr_dict = {}
 
-    " Check if not in a Git repo
+    " Check if Git is installed
     if v:shell_error
         return attr_dict
     endif
+
+    " Error reporting
+    let idx = 0
+    for ln in result
+        if ln =~# 'is not a valid attribute name:'
+            echohl Warning
+            echomsg ln
+            echohl None
+            let idx = idx + 1
+        else
+            let result = result[idx:]
+            break
+        endif
+    endfor
 
     let item = 0
 
