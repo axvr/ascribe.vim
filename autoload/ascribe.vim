@@ -11,7 +11,7 @@
 " along with this software. If not, see
 " <http://creativecommons.org/publicdomain/zero/1.0/>.
 
-function ascribe#configure_buffer(file)
+function! ascribe#configure_buffer(file)
     let b:attributes = s:get_attributes(keys(g:ascribe_handlers), a:file)
 
     for l:attr in keys(b:attributes)
@@ -19,7 +19,7 @@ function ascribe#configure_buffer(file)
     endfor
 endfunction
 
-function <SID>get_attributes(attrs, file)
+function! <SID>get_attributes(attrs, file)
     let l:cli_args = join(map(copy(a:attrs), '"\"" . v:val .  "\""'), ' ')
     let l:result = systemlist('git check-attr ' . l:cli_args . ' -- ' . shellescape(a:file))
 
