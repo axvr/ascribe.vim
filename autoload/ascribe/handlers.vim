@@ -1,4 +1,4 @@
-" Ascribe.vim -- An alternative to EditorConfig.
+" Ascribe.vim -- A simpler alternative to EditorConfig.
 "
 " Written in 2019 by Alex Vear <av@axvr.io>
 "
