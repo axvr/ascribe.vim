@@ -12,6 +12,10 @@
 " <http://creativecommons.org/publicdomain/zero/1.0/>.
 
 function! ascribe#configure_buffer(file)
+    if exists('#Ascribe#User#pre')
+        doautocmd <nomodeline> Ascribe User pre
+    endif
+
     let global = get(g:, 'ascribe_handlers', {})
     let local  = get(b:, 'ascribe_handlers', {})
     let handlers = extend(copy(local), global, "keep")
@@ -19,11 +23,19 @@ function! ascribe#configure_buffer(file)
     unlet! b:attributes
     let b:attributes = s:get_attributes(keys(handlers), a:file)
 
+    if exists('#Ascribe#User#mid')
+        doautocmd <nomodeline> Ascribe User mid
+    endif
+
     for attr in keys(b:attributes)
         call handlers[attr](b:attributes[attr])
     endfor
 
     lockvar 2 b:attributes
+
+    if exists('#Ascribe#User#post')
+        doautocmd <nomodeline> Ascribe User post
+    endif
 endfunction
 
 function! <SID>get_attributes(attrs, file)

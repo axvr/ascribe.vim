@@ -21,7 +21,7 @@ let g:ascribe_handlers = {
     \   'binary': function('ascribe#handlers#binary')
     \ }
 
-augroup ascribe
+augroup Ascribe
     autocmd!
     autocmd BufReadPost,BufNewFile * call ascribe#configure_buffer(expand('%:p'))
 augroup END
@@ -29,3 +29,7 @@ augroup END
 unlet! g:ascribe_loaded
 let g:ascribe_loaded = 1
 lockvar g:ascribe_loaded
+
+if exists('#Ascribe#User#loaded')
+    doautocmd <nomodeline> Ascribe User loaded
+endif
