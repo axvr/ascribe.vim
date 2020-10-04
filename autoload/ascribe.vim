@@ -12,10 +12,14 @@
 " <http://creativecommons.org/publicdomain/zero/1.0/>.
 
 function! ascribe#configure_buffer(file)
-    let b:attributes = s:get_attributes(keys(g:ascribe_handlers), a:file)
+    let global = get(g:, 'ascribe_handlers', {})
+    let local  = get(b:, 'ascribe_handlers', {})
+    let handlers = extend(copy(local), global, "keep")
+
+    let b:attributes = s:get_attributes(keys(handlers), a:file)
 
     for attr in keys(b:attributes)
-        call g:ascribe_handlers[attr](b:attributes[attr])
+        call handlers[attr](b:attributes[attr])
     endfor
 endfunction
 
@@ -29,7 +33,7 @@ function! <SID>get_attributes(attrs, file)
 
     let attr_dict = {}
 
-    " Check if Git is installed
+    " Check if Git is installed and in Git repo.
     if v:shell_error
         return attr_dict
     endif
