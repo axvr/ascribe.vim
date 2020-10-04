@@ -25,3 +25,7 @@ augroup ascribe
     autocmd!
     autocmd BufReadPost,BufNewFile * call ascribe#configure_buffer(expand('%:p'))
 augroup END
+
+unlockvar g:ascribe_loaded
+let g:ascribe_loaded = 1
+lockvar g:ascribe_loaded
