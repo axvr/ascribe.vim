@@ -39,12 +39,8 @@ function! ascribe#handlers#tab_stop(width) dict
 endfunction
 
 function! ascribe#handlers#expand_tab(et) dict
-    if !a:et
-        if has_key(b:attributes, 'tab-stop')
-            call self['tab-stop'](b:attributes['tab-stop'])
-        else
-            call self['tab-stop'](&l:tabstop)
-        endif
+    if !a:et && !has_key(b:attributes, 'tab-stop')
+        call self['tab-stop'](&l:tabstop)
     endif
     call s:set_bool_opt(['expandtab'], a:et)
 endfunction
