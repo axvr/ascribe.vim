@@ -66,12 +66,9 @@ function! ascribe#handlers#trim_whitespace(trim) dict
 endfunction
 
 function! <SID>trim_whitespace()
-    normal mz
-    keepjumps normal Hmy
-    keepjumps %s/\s\+$//e
-    normal g'yz<CR>
-    normal g`z
-    delmarks z y
+    let view = winsaveview()
+    keeppatterns %s/\s\+$//e
+    call winrestview(view)
 endfunction
 
 function! <SID>set_bool_opt(opts, set)
