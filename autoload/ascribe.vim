@@ -16,11 +16,14 @@ function! ascribe#configure_buffer(file)
     let local  = get(b:, 'ascribe_handlers', {})
     let handlers = extend(copy(local), global, "keep")
 
+    unlet! b:attributes
     let b:attributes = s:get_attributes(keys(handlers), a:file)
 
     for attr in keys(b:attributes)
         call handlers[attr](b:attributes[attr])
     endfor
+
+    lockvar 2 b:attributes
 endfunction
 
 function! <SID>get_attributes(attrs, file)
