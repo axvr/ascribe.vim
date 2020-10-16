@@ -47,8 +47,21 @@ endfunction
 
 " Trim trailing whitespace
 function! ascribe#handlers#trim_whitespace(trim) dict
+    let is_trim_enabled = get(b:, 'ascribe_trim')
+
     if a:trim
-        exec 'autocmd! ascribe BufWritePre <buffer> call s:trim_whitespace()'
+        if !is_trim_enabled
+            augroup ascribe-trim
+                autocmd BufWritePre <buffer> call s:trim_whitespace()
+            augroup END
+            let b:ascribe_trim = 1
+            lockvar b:ascribe_trim
+        endif
+    elseif is_trim_enabled
+        augroup ascribe-trim
+            autocmd! BufWritePre <buffer>
+        augroup END
+        unlet b:ascribe_trim
     endif
 endfunction
 
