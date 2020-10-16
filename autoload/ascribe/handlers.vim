@@ -67,10 +67,11 @@ endfunction
 
 function! <SID>trim_whitespace()
     normal mz
-    normal Hmy
-    %s/\s\+$//e
-    normal 'yz<CR>
-    normal `z
+    keepjumps normal Hmy
+    keepjumps %s/\s\+$//e
+    normal g'yz<CR>
+    normal g`z
+    delmarks z y
 endfunction
 
 function! <SID>set_bool_opt(opts, set)
