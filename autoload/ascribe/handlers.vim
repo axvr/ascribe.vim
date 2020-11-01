@@ -11,6 +11,10 @@
 " along with this software. If not, see
 " <http://creativecommons.org/publicdomain/zero/1.0/>.
 
+" Null handler used to disable behaviour for an attribute.
+function! ascribe#handlers#null(v) dict
+endfunction
+
 function! ascribe#handlers#binary(value) dict
     call s:set_bool_opt(['binary', 'readonly'], a:value)
 endfunction
