@@ -1,0 +1,197 @@
+*ascribe.txt*                            A simpler alternative to EditorConfig.
+
+
+                       Ascribe.vim Manual by Alex Vear~
+
+
+Welcome to the Ascribe.vim user manual.     *ascribe*  *ascribe.vim*  *vim-ascribe*
+
+    1. Introduction ............................... |ascribe-intro|
+    2. Usage ...................................... |ascribe-usage|
+    3. Configuration .............................. |ascribe-configuration|
+       3.1. Options ............................... |ascribe-options|
+       3.2. Handlers .............................. |ascribe-handlers|
+    4. Change log ................................. |ascribe-changelog|
+    5. Legal ...................................... |ascribe-legal|
+    6. References ................................. |ascribe-references|
+
+==============================================================================
+ 1. INTRODUCTION                                                *ascribe-intro*
+
+This is the Vim implementation of Ascribe [1]: a simpler alternative to
+EditorConfig [5].  It's recommended that you read all the online documentation
+[1] before using Ascribe.
+
+==============================================================================
+ 2. USAGE                                                       *ascribe-usage*
+
+After installing this package, Ascribe.vim will immediately begin setting Vim
+options using the values in the `.gitattributes` file of a Git repository.  The
+defaults are described in the Ascribe specification [2].
+
+If you update a `.gitattributes` file to modify the attributes for a file
+already open in Vim, you can |reload| the buffer to make it use the new
+attributes.
+
+==============================================================================
+ 3. CONFIGURATION                                       *ascribe-configuration*
+
+This section of the manual covers how to configure Ascribe.vim.
+
+------------------------------------------------------------------------------
+ 3.1. OPTIONS                                                 *ascribe-options*
+..............................................................................
+                                                         *'g:ascribe_handlers'*
+
+When Ascribe.vim is loaded, it creates the 'g:ascribe_handlers' variable
+containing the default Ascribe configuration.  It's value is a |Dictionary| of
+Ascribe attribute names (type of |string| or |literal-string|) to handler
+functions (type of |Funcref|).
+
+(You can view the default values with `:echo g:ascribe_handlers`)
+
+Modifying the contents of this variable changes how Ascribe.vim handles
+attributes.
+
+1. Removing an item (e.g. `unlet g:ascribe_handlers['binary']`) will make
+   Ascribe.vim to ignore that attribute in the `.gitattributes` file.
+
+2. Adding an item will make Ascribe.vim check for that attribute and it will
+   pass the value set in the `.gitattributes` file to the associated handler
+   |Funcref|.
+
+3. Replacing a handler function with another will change how Ascribe.vim
+   handles the attribute being present in the `.gitattributes` file.
+
+It is rare that you would ever need to modify 'g:ascribe_handlers', and you
+should generally prefer to use 'b:ascribe_handlers' instead.
+
+Note if you installed Ascribe.vim using Vim |packages| and placed it in the
+`start` directory, you'll have to modify the 'g:ascribe_handlers' variable from
+the |after-directory| (`~/.vim/after/...`) otherwise Ascribe.vim will override
+it with the default.
+
+..............................................................................
+                                                         *'b:ascribe_handlers'*
+
+'b:ascribe_handlers' is the buffer local variant of 'g:ascribe_handlers'; it
+is used to add, disable or override handlers on specific buffers only.
+
+When a new buffer is opened, Ascribe.vim merges 'b:ascribe_handlers' with
+'g:ascribe_handlers' (the buffer local elements override the global ones), the
+resulting dictionary is the Ascribe handler configuration for that buffer.
+
+Unlike it's global counterpart, this variable isn't automatically created so
+you'll need to first create it with |:let|.  This variable can be set from
+either |autocommands| or a |filetype| plugin file.
+
+To disable an attribute on a single buffer you can override it to use the
+"null handler" like so:
+>
+    let b:ascribe_handlers['binary'] = function('ascribe#handlers#null')
+<
+..............................................................................
+                                                               *'b:attributes'*
+
+Just before Ascribe executes the handlers, Ascribe fetches the values set in
+the `.gitattributes` file of each of the attributes defined in the
+'g:ascribe_handlers' and 'b:ascribe_handlers' dictionaries for the opened
+file.  The result is the 'b:attributes' dictionary containing key-value pairs
+of attribute names to the values in the `.gitattributes` file.
+
+(Note that only values that were set in the `.gitattributes` file will appear
+in the 'b:attributes' dictionary.)
+
+The contents of this variable is only modifiable by handlers although it is
+highly unlikely that you would ever need to modify this dictionary.
+
+..............................................................................
+                                                           *'g:ascribe_loaded'*
+
+When Ascribe.vim has finished loading, it creates the variable
+'g:ascribe_loaded'.  Fetching the value of this variable with |get()| will
+allow you to check if Ascribe.vim has loaded.  You cannot modify this
+variable.
+>
+    if get(g:, 'ascribe_loaded')
+        " Loaded.
+    else
+        " Not loaded.
+    endif
+<
+------------------------------------------------------------------------------
+ 3.2. HANDLERS                                               *ascribe-handlers*
+
+Ascribe comes with several attribute handlers built-in for the default
+behaviour specified in the Ascribe specification [2], but it is possible to
+write your own custom handlers to add or change existing behaviour.
+
+If you plan to write a custom handler it is recommended that you read the
+Ascribe.vim source code [3] first (don't panic, there's only ~150 lines of
+code) to see more examples of handlers.
+
+..............................................................................
+                                                      *ascribe-handler-example*
+
+As an example we will walk through creating a simple custom attribute and
+handler to mark a file as "read only".
+
+First thing we need to do is to create the handler.  A handler can be either
+a |lambda| or a |Dictionary-function|.  All handler functions take a single
+argument which will either be `1` (true) `0` (false) or a string value.  In
+the case of a "read only" attribute it will only be `1` or `0`.
+>
+    function! AscribeSetReadonly(value) dict
+        if a:value
+            set readonly
+        else
+            set noreadonly
+        endif
+    endfunction
+<
+Next we need to register this new handler as the `read-only` attribute in
+either 'g:ascribe_handlers' to use on all files or 'b:ascribe_handlers' to
+only use this new attribute on specific files.
+>
+    let g:ascribe_handlers['read-only'] = function('AscribeSetReadonly')
+<
+Done.  You just added a "read only" attribute to Ascribe.  You can now use
+it by setting/unsetting the attribute in a `.gitattributes` file.
+>
+    # Set all files as read-only...
+    *  read-only
+
+    # ...except Vim script files.
+    *.vim  -read-only
+<
+==============================================================================
+ 4. CHANGE LOG                                              *ascribe-changelog*
+
+v1.0 [2020-11-01]~
+
+  * Initial release.
+
+==============================================================================
+ 5. LEGAL                                                       *ascribe-legal*
+
+Public domain.  No rights reserved.
+
+All source code, documentation and associated files packaged with Ascribe.vim
+are dedicated to the public domain.  A full copy of the CC0 (Creative Commons
+Zero v1.0 Universal) [4] public domain dedication should have been provided
+with this extension in the `COPYING` file.
+
+The author is not aware of any patent claims which may affect the use,
+modification or distribution of this software.
+
+==============================================================================
+ 6. REFERENCES                                             *ascribe-references*
+
+[1]: <https://axvr.io/projects/ascribe/>
+[2]: <https://axvr.io/projects/ascribe/specification/>
+[3]: <https://github.com/axvr/ascribe.vim>
+[4]: <https://creativecommons.org/publicdomain/zero/1.0/legalcode>
+[5]: <https://editorconfig.com>
+
+------------------------------------------------------------------------------
+vim:et:ts=4:sts=4:sw=4:tw=78:ft=help:norl:
