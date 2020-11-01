@@ -1,0 +1,9 @@
+* Maybe
+  - Autocmd events.
+
+* Future
+  - Write E2E tests.
+    - Before file
+    - Expected file
+    - Script to perform operation
+    - Script to check files match and if not, report problems
