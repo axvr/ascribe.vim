@@ -46,5 +46,5 @@ with this extension in the `COPYING` file.
 The author is not aware of any patent claims which may affect the use,
 modification or distribution of this software.
 
-[docs]: https://axvr.io/projects/ascribe
+[docs]: https://ascribe.axvr.uk
 [cc0]: https://creativecommons.org/publicdomain/zero/1.0/legalcode

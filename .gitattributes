@@ -1,3 +1,4 @@
+# See: https://ascribe.axvr.uk
 *           text=auto final-newline eol=lf expand-tab trim-trailing-whitespace
 *.vim       tab-stop=4 line-length=78
 doc/*.txt   tab-stop=4 line-length=78

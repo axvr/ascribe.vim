@@ -1,6 +1,6 @@
 " Ascribe.vim -- A simpler alternative to EditorConfig.
 "
-" Written in 2019 by Alex Vear <av@axvr.io>
+" Written in 2019 by Alex Vear <alex@vear.uk>
 "
 " To the extent possible under law, the author(s) have dedicated all
 " copyright and related and neighboring rights to this software to the

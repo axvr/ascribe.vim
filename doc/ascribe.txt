@@ -187,8 +187,8 @@ modification or distribution of this software.
 ==============================================================================
  6. REFERENCES                                             *ascribe-references*
 
-[1]: <https://axvr.io/projects/ascribe/>
-[2]: <https://axvr.io/projects/ascribe/specification/>
+[1]: <https://ascribe.axvr.uk>
+[2]: <https://ascribe.axvr.uk/spec>
 [3]: <https://github.com/axvr/ascribe.vim>
 [4]: <https://creativecommons.org/publicdomain/zero/1.0/legalcode>
 [5]: <https://editorconfig.com>
