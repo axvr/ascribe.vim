@@ -32,7 +32,7 @@ function! <SID>get_attributes(attrs, file)
     let fname = shellescape(fnamemodify(a:file, ':t'))
     let cmd = 'git -C ' . path . ' check-attr ' . attr_str . ' -- ' . fname
 
-    let result = systemlist(cmd)
+    silent let result = systemlist(cmd)
 
     let attr_dict = {}
 
