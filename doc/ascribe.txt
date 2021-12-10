@@ -18,8 +18,8 @@ Welcome to the Ascribe.vim user manual.     *ascribe*  *ascribe.vim*  *vim-ascri
 ==============================================================================
  1. INTRODUCTION                                                *ascribe-intro*
 
-This is the Vim implementation of Ascribe [1]: a simpler alternative to
-EditorConfig [5].  It's recommended that you read all the online documentation
+This is the Vim implementation of Ascribe: [1] a simpler alternative to
+EditorConfig [4].  It's recommended that you read all the online documentation
 [1] before using Ascribe.
 
 ==============================================================================
@@ -27,7 +27,7 @@ EditorConfig [5].  It's recommended that you read all the online documentation
 
 After installing this package, Ascribe.vim will immediately begin setting Vim
 options using the values in the `.gitattributes` file of a Git repository.  The
-defaults are described in the Ascribe specification [2].
+defaults are described in the Ascribe specification. [1]
 
 If you update a `.gitattributes` file to modify the attributes for a file
 already open in Vim, you can |reload| the buffer to make it use the new
@@ -123,11 +123,11 @@ variable.
  3.2. HANDLERS                                               *ascribe-handlers*
 
 Ascribe comes with several attribute handlers built-in for the default
-behaviour specified in the Ascribe specification [2], but it is possible to
+behaviour specified in the Ascribe specification, [1] but it is possible to
 write your own custom handlers to add or change existing behaviour.
 
 If you plan to write a custom handler it is recommended that you read the
-Ascribe.vim source code [3] first (don't panic, there's only ~150 lines of
+Ascribe.vim source code [2] first (don't panic, there's only ~150 lines of
 code) to see more examples of handlers.
 
 ..............................................................................
@@ -167,6 +167,10 @@ it by setting/unsetting the attribute in a `.gitattributes` file.
 ==============================================================================
  4. CHANGE LOG                                              *ascribe-changelog*
 
+v1.1 [2021-12-10]~
+
+  * Use new regular expression from v1.1 of the the Ascribe spec.
+
 v1.0 [2020-11-01]~
 
   * Initial release.
@@ -178,7 +182,7 @@ Public domain.  No rights reserved.
 
 All source code, documentation and associated files packaged with Ascribe.vim
 are dedicated to the public domain.  A full copy of the CC0 (Creative Commons
-Zero v1.0 Universal) [4] public domain dedication should have been provided
+Zero v1.0 Universal) [3] public domain dedication should have been provided
 with this extension in the `COPYING` file.
 
 The author is not aware of any patent claims which may affect the use,
@@ -188,10 +192,9 @@ modification or distribution of this software.
  6. REFERENCES                                             *ascribe-references*
 
 [1]: <https://ascribe.axvr.uk>
-[2]: <https://ascribe.axvr.uk/spec>
-[3]: <https://github.com/axvr/ascribe.vim>
-[4]: <https://creativecommons.org/publicdomain/zero/1.0/legalcode>
-[5]: <https://editorconfig.com>
+[2]: <https://github.com/axvr/ascribe.vim>
+[3]: <https://creativecommons.org/publicdomain/zero/1.0/legalcode>
+[4]: <https://editorconfig.com>
 
 ------------------------------------------------------------------------------
 vim:et:ts=4:sts=4:sw=4:tw=78:ft=help:norl:
