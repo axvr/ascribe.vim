@@ -59,9 +59,7 @@ function! <SID>get_attributes(attrs, file)
 
     for a in a:attrs
         let match = matchlist(result[item], '\m\C: \([0-9a-zA-Z_\/.+=-]*\)$')
-
         let item = item + 1
-
         let value = match[1]
 
         if value ==# 'unspecified'
