@@ -13,6 +13,11 @@ tend to be much smaller, faster and simpler than their EditorConfig
 counterparts.
 
 
+> **Note**<br>
+> Ascribe.vim is unmaintained.  Since both Vim and Neovim now come with included
+> EditorConfig support, I see no reason to continue maintaining Ascribe.
+
+
 ## Installation
 
 Before installation it is highly recommended to **read all** of the [Ascribe
